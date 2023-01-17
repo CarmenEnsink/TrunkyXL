@@ -36,39 +36,39 @@ corresponding_files, foldersvicon, folderssensors = correspondingfiles(folder)
 
 vicon = importvicondata (corresponding_files, foldersvicon)
 sensors = importsensordata (corresponding_files, folderssensors)
-sensors = resamplesensordata (sensors, vicon)
+sensors = resamplesensordata (sensors)
 
 for trial in sensors:
     if len(sensors[trial]['Pelvis']['resampled']) >= 3:
-        if '807_PP01' in trial or '807_PP02' in trial or '807_PP03' in trial or '807_PP04' in trial or '807_PP05' in trial or '807_PP06' in trial or '807_PP07' in trial:
-            # Data captured with Nodes software
-            # fs_nodes = 20 #?
-            sensors[trial]['Pelvis']['resampled'] = orientation_euler(sensors[trial]['Pelvis']['resampled'])
-            sensors[trial]['Lower back']['resampled'] = orientation_euler(sensors[trial]['Lower back']['resampled'])
-            sensors[trial]['Upper back']['resampled'] = orientation_euler(sensors[trial]['Upper back']['resampled'])
-            sensors[trial]['Lower back']['resampled'] = relative_orientation(sensors[trial]['Lower back']['resampled'], sensors[trial]['Pelvis']['resampled'], 'Pelvis')
-            sensors[trial]['Upper back']['resampled'] = relative_orientation(sensors[trial]['Upper back']['resampled'], sensors[trial]['Lower back']['resampled'], 'Lower back')
-            sensors[trial]['Upper back']['resampled'] = relative_orientation(sensors[trial]['Upper back']['resampled'], sensors[trial]['Pelvis']['resampled'], 'Pelvis')
-        else:
-            # Data captured with QSense Motion software
-            sensors[trial]['Upper back']['resampled'] = orientation_estimation(sensors[trial]['Fs'], sensors[trial]['Upper back']['resampled'])
-            sensors[trial]['Lower back']['resampled'] = orientation_estimation(sensors[trial]['Fs'], sensors[trial]['Lower back']['resampled'])
-            sensors[trial]['Pelvis']['resampled'] = orientation_estimation(sensors[trial]['Fs'], sensors[trial]['Pelvis']['resampled'])
-            sensors[trial]['Pelvis']['resampled'] = orientation_euler(sensors[trial]['Pelvis']['resampled'])
-            sensors[trial]['Lower back']['resampled'] = orientation_euler(sensors[trial]['Lower back']['resampled'])
-            sensors[trial]['Upper back']['resampled'] = orientation_euler(sensors[trial]['Upper back']['resampled'])
-            sensors[trial]['Lower back']['resampled'] = relative_orientation(sensors[trial]['Lower back']['resampled'], sensors[trial]['Pelvis']['resampled'], 'Pelvis')
-            sensors[trial]['Upper back']['resampled'] = relative_orientation(sensors[trial]['Upper back']['resampled'], sensors[trial]['Lower back']['resampled'], 'Lower back')
-            sensors[trial]['Upper back']['resampled'] = relative_orientation(sensors[trial]['Upper back']['resampled'], sensors[trial]['Pelvis']['resampled'], 'Pelvis')
+        # if '807_PP01' in trial or '807_PP02' in trial or '807_PP03' in trial or '807_PP04' in trial or '807_PP05' in trial or '807_PP06' in trial or '807_PP07' in trial:
+        #     # Data captured with Nodes software
+        #     # fs_nodes = 20 #?
+        #     sensors[trial]['Pelvis']['resampled'] = orientation_euler(sensors[trial]['Pelvis']['resampled'])
+        #     sensors[trial]['Lower back']['resampled'] = orientation_euler(sensors[trial]['Lower back']['resampled'])
+        #     sensors[trial]['Upper back']['resampled'] = orientation_euler(sensors[trial]['Upper back']['resampled'])
+        #     sensors[trial]['Lower back']['resampled'] = relative_orientation(sensors[trial]['Lower back']['resampled'], sensors[trial]['Pelvis']['resampled'], 'Pelvis')
+        #     sensors[trial]['Upper back']['resampled'] = relative_orientation(sensors[trial]['Upper back']['resampled'], sensors[trial]['Lower back']['resampled'], 'Lower back')
+        #     sensors[trial]['Upper back']['resampled'] = relative_orientation(sensors[trial]['Upper back']['resampled'], sensors[trial]['Pelvis']['resampled'], 'Pelvis')
+        # else:
+        # Data captured with QSense Motion software
+        sensors[trial]['Upper back']['resampled'] = orientation_estimation(sensors[trial]['Fs'], sensors[trial]['Upper back']['resampled'])
+        sensors[trial]['Lower back']['resampled'] = orientation_estimation(sensors[trial]['Fs'], sensors[trial]['Lower back']['resampled'])
+        sensors[trial]['Pelvis']['resampled'] = orientation_estimation(sensors[trial]['Fs'], sensors[trial]['Pelvis']['resampled'])
+        sensors[trial]['Pelvis']['resampled'] = orientation_euler(sensors[trial]['Pelvis']['resampled'])
+        sensors[trial]['Lower back']['resampled'] = orientation_euler(sensors[trial]['Lower back']['resampled'])
+        sensors[trial]['Upper back']['resampled'] = orientation_euler(sensors[trial]['Upper back']['resampled'])
+        sensors[trial]['Lower back']['resampled'] = relative_orientation(sensors[trial]['Lower back']['resampled'], sensors[trial]['Pelvis']['resampled'], 'Pelvis')
+        sensors[trial]['Upper back']['resampled'] = relative_orientation(sensors[trial]['Upper back']['resampled'], sensors[trial]['Lower back']['resampled'], 'Lower back')
+        sensors[trial]['Upper back']['resampled'] = relative_orientation(sensors[trial]['Upper back']['resampled'], sensors[trial]['Pelvis']['resampled'], 'Pelvis')
         
-for trial in sensors:
-    lag = 0
-    try:
-        correlation = signal.correlate(sensors[trial]['Upper back']['resampled']['ez relative to Pelvis'], vicon[trial]['RSpineAngles'][:,1], mode='full')
-        lags = signal.correlation_lags(sensors[trial]['Upper back']['resampled']['ez relative to Pelvis'].size, vicon[trial]['RSpineAngles'][:,1].size, mode="full")
-        vicon[trial]['lag'] = lags[np.argmax(correlation)]
-    except:
-        pass
+# for trial in sensors:
+#     lag = 0
+#     try:
+#         correlation = signal.correlate(sensors[trial]['Upper back']['resampled']['ez relative to Pelvis'], vicon[trial]['RSpineAngles'][:,1], mode='full')
+#         lags = signal.correlation_lags(sensors[trial]['Upper back']['resampled']['ez relative to Pelvis'].size, vicon[trial]['RSpineAngles'][:,1].size, mode="full")
+#         vicon[trial]['lag'] = lags[np.argmax(correlation)]
+#     except:
+#         pass
 
     
 
@@ -85,9 +85,9 @@ try:
     # ax[2].plot(sensors[trial]['Lower back']['resampled']['ex'], label='x pelvis')
     # ax[0].plot(sensors[trial]['Lower back']['resampled']['ey'], label='y pelvis')
     # ax[1].plot(sensors[trial]['Lower back']['resampled']['ez'], label='z pelvis')
-    # ax[2].plot(sensors[trial]['Upper back']['resampled']['ex'], label='x upper back') # Rotation
-    # ax[0].plot(sensors[trial]['Upper back']['resampled']['ey'], label='y upper back') # Flexion extension
-    # ax[1].plot(sensors[trial]['Upper back']['resampled']['ez'], label='z upper back') # Latero flexion
+    ax[2].plot(sensors[trial]['Upper back']['resampled']['ex'], label='x upper back') # Rotation
+    ax[0].plot(sensors[trial]['Upper back']['resampled']['ey'], label='y upper back') # Flexion extension
+    ax[1].plot(sensors[trial]['Upper back']['resampled']['ez'], label='z upper back') # Latero flexion
     
     ax[2].plot(np.arange(0,len(sensors[trial]['Upper back']['resampled']['ex relative to Pelvis'])), sensors[trial]['Upper back']['resampled']['ex relative to Pelvis'][:], label='x upper back relative')
     ax[0].plot(np.arange(0,len(sensors[trial]['Upper back']['resampled']['ey relative to Pelvis'])), sensors[trial]['Upper back']['resampled']['ey relative to Pelvis'][:], label='y upper back relative')
