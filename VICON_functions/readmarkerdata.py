@@ -130,10 +130,7 @@ def readmarkerdata (filepath, **kwargs):
     actual_start_frame = reader.first_frame
     actual_stop_frame = reader.last_frame
     
-    if analog_wanted == True:
-        return markerdata, fs_markerdata, analogdata
-    elif analog_wanted == False:
-        return markerdata, fs_markerdata
+    return markerdata, fs_markerdata, analogdata
         
     # fig1 = plt.figure()
     # ax3 = fig1.add_subplot(111, projection='3d') 

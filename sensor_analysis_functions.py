@@ -4,13 +4,14 @@ Sint Maartenskliniek study ID: 807_TrunkyXL
     Functions for analysis of 2M sensor data (Nodes or QSense Motion)
 
 Last update:
+    02-02-2023: C.J. Ensink, update orientation estimation (Mahony AHRS filter)
     21-09-2022: C.J. Ensink, c.ensink@maartenskliniek.nl
     
 """
 
 import numpy as np
 import matplotlib.pyplot as plt
-import ahrs
+from ahrs.filters import Mahony
 from scipy.spatial.transform import Rotation as R
 
 import pyquaternion as pyq
@@ -21,7 +22,9 @@ def orientation_estimation (fs, sensordata):
     # Mahony was chosen in favor of Madgwick, as the LEC of the Sint Maartenskliniek has a lot of metal that might interfere on the magnetometer, therefore orientation estimations including the magnetometer signal (Madgwick) might drift quite a lot.
     # Euler angles were calculated from the estimated quaternion orientation.
     
-    time = np.arange(0, len(sensordata)/fs, 1/fs)
+    time = (np.zeros(shape=(len(sensordata),1))).flatten()
+    for i in range(1,len(time)):
+        time[i] = time[i-1]+1/fs
     gyrX = sensordata['gx'].to_numpy()
     gyrY = sensordata['gy'].to_numpy()
     gyrZ = sensordata['gz'].to_numpy()
@@ -29,63 +32,48 @@ def orientation_estimation (fs, sensordata):
     accY = sensordata['ay'].to_numpy()
     accZ = sensordata['az'].to_numpy()
 
-    fig = plt.figure(figsize=(10, 5))
-    ax1 = fig.add_subplot(2,1,1)
-    ax2 = fig.add_subplot(2,1,2)
-    ax1.plot(time,gyrX,c='r',linewidth=0.5)
-    ax1.plot(time,gyrY,c='g',linewidth=0.5)
-    ax1.plot(time,gyrZ,c='b',linewidth=0.5)
-    ax1.set_title("gyroscope")
-    ax1.set_xlabel("time (s)")
-    ax1.set_ylabel("angular velocity (degrees/s)")
-    ax1.legend(["x","y","z"])
-    ax2.plot(time,accX,c='r',linewidth=0.5)
-    ax2.plot(time,accY,c='g',linewidth=0.5)
-    ax2.plot(time,accZ,c='b',linewidth=0.5)
-    ax2.set_title("accelerometer")
-    ax2.set_xlabel("time (s)")
-    ax2.set_ylabel("acceleration (g)")
-    ax2.legend(["x","y","z"])
-    plt.show(block=False)
-
     # Compute orientation
-    quat  = np.zeros((time.size, 4), dtype=np.float64)
-    
-    # initial convergence
-    initPeriod = 2
-    indexSel = time<=time[0]+initPeriod
-    gyr=np.zeros(3, dtype=np.float64)
-    acc = np.array([np.mean(accX[indexSel]), np.mean(accY[indexSel]), np.mean(accZ[indexSel])])
-    mahony = ahrs.filters.Mahony(Kp=1, Ki=0,KpInit=1, frequency=fs)
-    q = np.array([1.0,0.0,0.0,0.0], dtype=np.float64)
-    for i in range(0, 2000):
-        q = mahony.updateIMU(q, gyr=gyr, acc=acc)
-    
-    # For all data
-    for t in range(0,time.size):
-        # if(stationary[t]):
-        #     mahony.Kp = 0.5
-        # else:
-        #     mahony.Kp = 0
-        mahony.Kp = 0
-        gyr = np.array([gyrX[t],gyrY[t],gyrZ[t]])*np.pi/180
-        acc = np.array([accX[t],accY[t],accZ[t]])
-        quat[t,:]=mahony.updateIMU(q,gyr=gyr,acc=acc)
+    orientation = Mahony()
+    Q = np.tile([1., 0., 0., 0.], (time.size, 1)) # Allocate for quaternions
+    for t in range(1,time.size):
+        gyr_data = np.array([gyrX[t],gyrY[t],gyrZ[t]])*np.pi/180 # In radians
+        acc_data = np.array([accX[t],accY[t],accZ[t]]) # In g
+        Q[t] = orientation.updateIMU(Q[t-1], gyr=gyr_data, acc=acc_data)
         
-    sensordata['q0'] = quat[:,0]
-    sensordata['q1'] = quat[:,1]
-    sensordata['q2'] = quat[:,2]
-    sensordata['q3'] = quat[:,3]
+    sensordata['q0'] = Q[:,0]
+    sensordata['q1'] = Q[:,1]
+    sensordata['q2'] = Q[:,2]
+    sensordata['q3'] = Q[:,3]
     
+    # Debug plot - angular velocity and acceleration
+    # fig = plt.figure(figsize=(10, 5))
+    # ax1 = fig.add_subplot(2,1,1)
+    # ax2 = fig.add_subplot(2,1,2)
+    # ax1.plot(time,gyrX,c='r',linewidth=0.5)
+    # ax1.plot(time,gyrY,c='g',linewidth=0.5)
+    # ax1.plot(time,gyrZ,c='b',linewidth=0.5)
+    # ax1.set_title("gyroscope")
+    # ax1.set_xlabel("time (s)")
+    # ax1.set_ylabel("angular velocity (degrees/s)")
+    # ax1.legend(["x","y","z"])
+    # ax2.plot(time,accX,c='r',linewidth=0.5)
+    # ax2.plot(time,accY,c='g',linewidth=0.5)
+    # ax2.plot(time,accZ,c='b',linewidth=0.5)
+    # ax2.set_title("accelerometer")
+    # ax2.set_xlabel("time (s)")
+    # ax2.set_ylabel("acceleration (g)")
+    # ax2.legend(["x","y","z"])
+    # plt.show(block=False)
+  
     return sensordata
 
 
 
 def orientation_euler(sensordata):
     
-    quat = np.swapaxes(np.array((sensordata['q0'],sensordata['q1'],sensordata['q2'],sensordata['q3'])), 0,1)
+    quat = np.array([sensordata[f'q{i}'] for i in range(4)]).T
     euler = np.zeros((1,3))
-    for i in range(0, len(sensordata['q0'])):
+    for i in range(len(sensordata['q0'])):
         try:
             r = R.from_quat(quat[i])
             euler = np.vstack((euler, r.as_euler('xyz', degrees=True)))
@@ -93,31 +81,6 @@ def orientation_euler(sensordata):
             euler = np.vstack((euler, np.array([0,0,0])))   
     euler = euler[1:,:]
     
-    dife = np.diff(euler, axis=0)
-    startneg = np.argwhere(dife[:,0] < -350).flatten()
-    stopneg = np.argwhere(dife[:,0] > 350).flatten()
-    for i in range(len(startneg)):
-        try:
-            euler[startneg[i]+1:stopneg[stopneg>startneg[i]][0]+1, 0] = euler[startneg[i]+1:stopneg[stopneg>startneg[i]][0]+1, 0]+360
-        except:
-            pass
-    
-    startneg = np.argwhere(dife[:,1] < -350).flatten()
-    stopneg = np.argwhere(dife[:,1] > 350).flatten()
-    for i in range(len(startneg)):
-        try:
-            euler[startneg[i]+1:stopneg[stopneg>startneg[i]][0]+1, 1] = euler[startneg[i]+1:stopneg[stopneg>startneg[i]][0]+1, 1]+360
-        except:
-            pass
-        
-    startneg = np.argwhere(dife[:,2] < -350).flatten()
-    stopneg = np.argwhere(dife[:,2] > 350).flatten()
-    for i in range(len(startneg)):
-        try:
-            euler[startneg[i]+1:stopneg[stopneg>startneg[i]][0]+1, 2] = euler[startneg[i]+1:stopneg[stopneg>startneg[i]][0]+1, 2]+360
-        except:
-            pass
-        
     sensordata['ex'] = euler[:,0]
     sensordata['ey'] = euler[:,1]
     sensordata['ez'] = euler[:,2]
@@ -142,7 +105,7 @@ def relative_orientation(sensorRelative, sensorFixed, relative_to):
         q_relative = pyq.Quaternion( quat_sensorRelative[j,:] )
         
         # Get the 3D difference between these two orientations
-        qd = q_fixed.conjugate * q_relative
+        qd = q_relative * q_fixed.conjugate
         qd = qd.normalised
     
         # Calculate Euler angles from this difference quaternion
