@@ -112,10 +112,119 @@ def relative_orientation(sensorRelative, sensorFixed, relative_to):
         phi[j]   = np.rad2deg( math.atan2( 2 * (qd.w * qd.x + qd.y * qd.z), 1 - 2 * (qd.x**2 + qd.y**2) ) )
         theta[j] = np.rad2deg( math.asin ( 2 * (qd.w * qd.y - qd.z * qd.x) ) )
         psi[j]   = np.rad2deg( math.atan2( 2 * (qd.w * qd.z + qd.x * qd.y), 1 - 2 * (qd.y**2 + qd.z**2) ) )
+    phi = phi.flatten()
+    theta = theta.flatten()
+    psi = psi.flatten()
     
+    diffs_pos = np.argwhere(np.diff(phi)>90).flatten()
+    diffs_neg = np.argwhere(np.diff(phi)<-90).flatten()
+    if len(diffs_pos)>0 and len(diffs_neg)>0:
+        if diffs_pos[0] < diffs_neg[0]:
+            for i in range(len(diffs_pos)):
+                try:
+                    phi[diffs_pos[i]+1:diffs_neg[diffs_neg>diffs_pos[i]][0]+1] = phi[diffs_pos[i]+1:diffs_neg[diffs_neg>diffs_pos[i]][0]+1]-180
+                except IndexError:
+                    phi[diffs_pos[i]+1:] = phi[diffs_pos[i]+1:]-180
+        elif diffs_neg[0] < diffs_pos[0]:
+            for i in range(len(diffs_neg)):
+                try:
+                    phi[diffs_neg[i]+1:diffs_pos[diffs_pos>diffs_neg[i]][0]+1] = phi[diffs_neg[i]+1:diffs_pos[diffs_pos>diffs_neg[i]][0]+1]+180
+                except IndexError:
+                    phi[diffs_neg[i]+1:] = phi[diffs_neg[i]+1:]+180
+    diffs_pos = np.argwhere(np.diff(phi)>90).flatten()
+    diffs_neg = np.argwhere(np.diff(phi)<-90).flatten()
+    if len(diffs_pos)>0 and len(diffs_neg)>0:
+        if diffs_pos[0] < diffs_neg[0]:
+            for i in range(len(diffs_pos)):
+                try:
+                    phi[diffs_pos[i]+1:diffs_neg[diffs_neg>diffs_pos[i]][0]+1] = phi[diffs_pos[i]+1:diffs_neg[diffs_neg>diffs_pos[i]][0]+1]-180
+                except IndexError:
+                    phi[diffs_pos[i]+1:] = phi[diffs_pos[i]+1:]-180
+        elif diffs_neg[0] < diffs_pos[0]:
+            for i in range(len(diffs_neg)):
+                try:
+                    phi[diffs_neg[i]+1:diffs_pos[diffs_pos>diffs_neg[i]][0]+1] = phi[diffs_neg[i]+1:diffs_pos[diffs_pos>diffs_neg[i]][0]+1]+180
+                except IndexError:
+                    phi[diffs_neg[i]+1:] = phi[diffs_neg[i]+1:]+180
+    
+    diffs_pos = np.argwhere(np.diff(theta)>90).flatten()
+    diffs_neg = np.argwhere(np.diff(theta)<-90).flatten()
+    if len(diffs_pos)>0 and len(diffs_neg)>0:
+        if diffs_pos[0] < diffs_neg[0]:
+            for i in range(len(diffs_pos)):
+                try:
+                    theta[diffs_pos[i]+1:diffs_neg[diffs_neg>diffs_pos[i]][0]+1] = theta[diffs_pos[i]+1:diffs_neg[diffs_neg>diffs_pos[i]][0]+1]-180
+                except IndexError:
+                    theta[diffs_pos[i]+1:] = theta[diffs_pos[i]+1:]-180
+        elif diffs_neg[0] < diffs_pos[0]:
+            for i in range(len(diffs_neg)):
+                try:
+                    theta[diffs_neg[i]+1:diffs_pos[diffs_pos>diffs_neg[i]][0]+1] = theta[diffs_neg[i]+1:diffs_pos[diffs_pos>diffs_neg[i]][0]+1]+180
+                except IndexError:
+                    theta[diffs_neg[i]+1:] = theta[diffs_neg[i]+1:]+180
+    diffs_pos = np.argwhere(np.diff(theta)>90).flatten()
+    diffs_neg = np.argwhere(np.diff(theta)<-90).flatten()
+    if len(diffs_pos)>0 and len(diffs_neg)>0:
+        if diffs_pos[0] < diffs_neg[0]:
+            for i in range(len(diffs_pos)):
+                try:
+                    theta[diffs_pos[i]+1:diffs_neg[diffs_neg>diffs_pos[i]][0]+1] = theta[diffs_pos[i]+1:diffs_neg[diffs_neg>diffs_pos[i]][0]+1]-180
+                except IndexError:
+                    theta[diffs_pos[i]+1:] = theta[diffs_pos[i]+1:]-180
+        elif diffs_neg[0] < diffs_pos[0]:
+            for i in range(len(diffs_neg)):
+                try:
+                    theta[diffs_neg[i]+1:diffs_pos[diffs_pos>diffs_neg[i]][0]+1] = theta[diffs_neg[i]+1:diffs_pos[diffs_pos>diffs_neg[i]][0]+1]+180
+                except IndexError:
+                    theta[diffs_neg[i]+1:] = theta[diffs_neg[i]+1:]+180
+    diffs_pos = np.argwhere(np.diff(psi)>90).flatten()
+    diffs_neg = np.argwhere(np.diff(psi)<-90).flatten()
+    if len(diffs_pos)>0 and len(diffs_neg)>0:
+        if diffs_pos[0] < diffs_neg[0]:
+            for i in range(len(diffs_pos)):
+                try:
+                    psi[diffs_pos[i]+1:diffs_neg[diffs_neg>diffs_pos[i]][0]+1] = psi[diffs_pos[i]+1:diffs_neg[diffs_neg>diffs_pos[i]][0]+1]-180
+                except IndexError:
+                    psi[diffs_pos[i]+1:] = psi[diffs_pos[i]+1:]-180
+        elif diffs_neg[0] < diffs_pos[0]:
+            for i in range(len(diffs_neg)):
+                try:
+                    psi[diffs_neg[i]+1:diffs_pos[diffs_pos>diffs_neg[i]][0]+1] = psi[diffs_neg[i]+1:diffs_pos[diffs_pos>diffs_neg[i]][0]+1]+180
+                except IndexError:
+                    psi[diffs_neg[i]+1:] = psi[diffs_neg[i]+1:]+180
+    diffs_pos = np.argwhere(np.diff(psi)>90).flatten()
+    diffs_neg = np.argwhere(np.diff(psi)<-90).flatten()
+    if len(diffs_pos)>0 and len(diffs_neg)>0:
+        if diffs_pos[0] < diffs_neg[0]:
+            for i in range(len(diffs_pos)):
+                try:
+                    psi[diffs_pos[i]+1:diffs_neg[diffs_neg>diffs_pos[i]][0]+1] = psi[diffs_pos[i]+1:diffs_neg[diffs_neg>diffs_pos[i]][0]+1]-180
+                except IndexError:
+                    psi[diffs_pos[i]+1:] = psi[diffs_pos[i]+1:]-180
+        elif diffs_neg[0] < diffs_pos[0]:
+            for i in range(len(diffs_neg)):
+                try:
+                    psi[diffs_neg[i]+1:diffs_pos[diffs_pos>diffs_neg[i]][0]+1] = psi[diffs_neg[i]+1:diffs_pos[diffs_pos>diffs_neg[i]][0]+1]+180
+                except IndexError:
+                    psi[diffs_neg[i]+1:] = psi[diffs_neg[i]+1:]+180
+    
+    if np.mean(phi) < -150:
+        phi = phi + 180
+    if np.mean(theta) < -150:
+        theta = theta + 180
+    if np.mean(psi) < -150:
+        psi = psi + 180
+    if np.mean(phi) > 150:
+        phi = phi - 180
+    if np.mean(theta) > 150:
+        theta = theta - 180
+    if np.mean(psi) > 150:
+        psi = psi - 180
+        
     eulerx_relative_to = 'ex relative to '+ relative_to
     eulery_relative_to = 'ey relative to '+ relative_to
     eulerz_relative_to = 'ez relative to '+ relative_to
+        
     sensorRelative[eulerx_relative_to] = phi
     sensorRelative[eulery_relative_to] = theta
     sensorRelative[eulerz_relative_to] = psi
