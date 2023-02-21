@@ -449,14 +449,17 @@ def importsensordata (corresponding_files, folderssensors):
     return sensors
 
 
-def resamplesensordata (sensors):
+def resamplesensordata (sensors, vicon):
     for trial in sensors:
-        if sensors[trial]['Software'] == 'QSense Motion':
-            sensors[trial]['Fs'] = 50
+        # if sensors[trial]['Software'] == 'QSense Motion':
+        #     sensors[trial]['Fs'] = 50
         
-        if sensors[trial]['Software'] == 'Corpus':
-            sensors[trial]['Fs'] = 30
+        # if sensors[trial]['Software'] == 'Corpus':
+        #     sensors[trial]['Fs'] = 25 #30
         
+        nviconsamples = len(vicon[trial]['LSpineAngles'])
+        nsensorsamples = len(sensors[trial]['Upper back']['raw'])
+        sensors[trial]['Fs'] = int(nsensorsamples/(nviconsamples/100))
         # elif sensors[trial]['Software'] == 'Nodes':
         #     try:
         #         nviconsamples = len(vicon[trial]['LSpineAngles'])

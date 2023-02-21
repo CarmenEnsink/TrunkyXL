@@ -11,7 +11,7 @@ Last update:
 
 import numpy as np
 import matplotlib.pyplot as plt
-from ahrs.filters import Mahony
+from ahrs.filters import Mahony, Madgwick
 from scipy.spatial.transform import Rotation as R
 
 import pyquaternion as pyq
@@ -31,14 +31,19 @@ def orientation_estimation (fs, sensordata):
     accX = sensordata['ax'].to_numpy()
     accY = sensordata['ay'].to_numpy()
     accZ = sensordata['az'].to_numpy()
-
+    magX = sensordata['mx'].to_numpy()
+    magY = sensordata['my'].to_numpy()
+    magZ = sensordata['mz'].to_numpy()
+    
     # Compute orientation
-    orientation = Mahony()
+    # orientation = Mahony()
+    orientation = Madgwick()
     Q = np.tile([1., 0., 0., 0.], (time.size, 1)) # Allocate for quaternions
     for t in range(1,time.size):
-        gyr_data = np.array([gyrX[t],gyrY[t],gyrZ[t]])*np.pi/180 # In radians
-        acc_data = np.array([accX[t],accY[t],accZ[t]]) # In g
-        Q[t] = orientation.updateIMU(Q[t-1], gyr=gyr_data, acc=acc_data)
+        gyr_data = np.array([gyrX[t],gyrY[t],gyrZ[t]])*np.pi/180 # In radians/s
+        acc_data = np.array([accX[t],accY[t],accZ[t]])*9.81 # In m/s^2 g
+        mag_data = np.array([magX[t],magY[t],magZ[t]])
+        Q[t] = orientation.updateMARG(Q[t-1], gyr=gyr_data, acc=acc_data, mag=mag_data)
         
     sensordata['q0'] = Q[:,0]
     sensordata['q1'] = Q[:,1]

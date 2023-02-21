@@ -22,7 +22,7 @@ corresponding_files, foldersvicon, folderssensors = correspondingfiles(folder)
 
 vicon = importvicondata (corresponding_files, foldersvicon)
 sensors = importsensordata (corresponding_files, folderssensors)
-sensors = resamplesensordata (sensors)
+sensors = resamplesensordata (sensors, vicon)
 
 for trial in sensors:
     if sensors[trial]['Software'] != 'Corpus' and 'PP17' not in trial and len(sensors[trial]['Pelvis']['resampled']) >= 3:
@@ -82,24 +82,24 @@ for trial in sensors:
         try:
             fig, ax = plt.subplots(nrows=3, ncols=1)
             ax[0].set_title('Euler orientations '+trial[:-4])
-            ax[0].plot(vicon[trial]['LSpineAngles'][:,0], label='x Spine') # Flexion extension
-            ax[1].plot(vicon[trial]['LSpineAngles'][:,1], label='y Spine') # Latero flexion
-            ax[2].plot(vicon[trial]['LSpineAngles'][:,2], label='z Spine') # Rotation
+            ax[0].plot(vicon[trial]['RSpineAngles'][:,0], label='x Spine') # Flexion extension
+            ax[1].plot(vicon[trial]['RSpineAngles'][:,1], label='y Spine') # Latero flexion
+            ax[2].plot(vicon[trial]['RSpineAngles'][:,2], label='z Spine') # Rotation
             
             # ax[0].plot(vicon[trial]['LThoraxAngles'][:,0], label='x Spine') # Flexion extension
             # ax[1].plot(vicon[trial]['LThoraxAngles'][:,1], label='y Spine') # Latero flexion
             # ax[2].plot(vicon[trial]['LThoraxAngles'][:,2], label='z Spine') # Rotation
             
             # ax[1].plot(sensors[trial]['Pelvis']['resampled']['ex'], label='x pelvis')
-            # ax[0].plot(sensors[trial]['Pelvis']['resampled']['ey'], label='y pelvis')
+            # ax[0].plot(-1*sensors[trial]['Pelvis']['resampled']['ey'], label='y pelvis')
             # ax[2].plot(sensors[trial]['Pelvis']['resampled']['ez'], label='z pelvis')
             
-            # ax[0].plot(-1*sensors[trial]['Upper back']['resampled']['ex'], label='x upper back') # Rotation
-            # ax[1].plot(sensors[trial]['Upper back']['resampled']['ey'], label='y upper back') # Flexion extension
+            # ax[1].plot(sensors[trial]['Upper back']['resampled']['ex'], label='x upper back') # Rotation
+            # ax[0].plot(-1*sensors[trial]['Upper back']['resampled']['ey'], label='y upper back') # Flexion extension
             # ax[2].plot(sensors[trial]['Upper back']['resampled']['ez'], label='z upper back') # Latero flexion
             
-            ax[1].plot(-1*sensors[trial]['Upper back']['resampled']['ex relative to Pelvis'], label='x upper back relative')
-            ax[2].plot(sensors[trial]['Upper back']['resampled']['ey relative to Pelvis'], label='y upper back relative')
+            ax[1].plot(sensors[trial]['Upper back']['resampled']['ex relative to Pelvis'], label='x upper back relative')
+            ax[2].plot(-1*sensors[trial]['Upper back']['resampled']['ey relative to Pelvis'], label='y upper back relative')
             ax[0].plot(sensors[trial]['Upper back']['resampled']['ez relative to Pelvis'], label='z upper back relative')
             
             ax[0].legend()
