@@ -4,6 +4,7 @@ Sint Maartenskliniek study ID: 807_TrunkyXL
     Functions for analysis of 2M sensor data (Nodes or QSense Motion)
 
 Last update:
+    21-02-2023: C.J. Ensink, update orientation estimation (Madgwick MARG filter)
     02-02-2023: C.J. Ensink, update orientation estimation (Mahony AHRS filter)
     21-09-2022: C.J. Ensink, c.ensink@maartenskliniek.nl
     
@@ -18,8 +19,8 @@ import pyquaternion as pyq
 import math
 
 def orientation_estimation (fs, sensordata):
-    # This function uses the Mahony AHRS filter to estimate orientation (quaternion) from accelerometer and gyroscope data.
-    # Mahony was chosen in favor of Madgwick, as the LEC of the Sint Maartenskliniek has a lot of metal that might interfere on the magnetometer, therefore orientation estimations including the magnetometer signal (Madgwick) might drift quite a lot.
+    # This function uses the Madgwick AHRS filter to estimate orientation (quaternion) from accelerometer, gyroscope and magnetometer data.
+    # Mahony and Madgwick (both with and without magnetometer) were compared to vicon; the Madgwick with magnetometer data seemed closest to the vicon angles
     # Euler angles were calculated from the estimated quaternion orientation.
     
     time = (np.zeros(shape=(len(sensordata),1))).flatten()
@@ -81,7 +82,7 @@ def orientation_euler(sensordata):
     for i in range(len(sensordata['q0'])):
         try:
             r = R.from_quat(quat[i])
-            euler = np.vstack((euler, r.as_euler('xyz', degrees=True)))
+            euler = np.vstack((euler, r.as_euler('xyz', degrees=True))) # 'zyx'?
         except:
             euler = np.vstack((euler, np.array([0,0,0])))   
     euler = euler[1:,:]
@@ -121,6 +122,7 @@ def relative_orientation(sensorRelative, sensorFixed, relative_to):
     theta = theta.flatten()
     psi = psi.flatten()
     
+    # Correct gimbal lock and 180 degree rotation
     diffs_pos = np.argwhere(np.diff(phi)>90).flatten()
     diffs_neg = np.argwhere(np.diff(phi)<-90).flatten()
     if len(diffs_pos)>0 and len(diffs_neg)>0:
