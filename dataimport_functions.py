@@ -67,9 +67,9 @@ def correspondingfiles(folder):
     # 807_pp03
     corresponding_files['807_pp03'] = dict()
     # Validatie trial 1
-    corresponding_files['807_pp03']['807_PP03_M02.c3d'] = 'QSM_20230116122258' # Gimbal lock in senosrdata
+    # corresponding_files['807_pp03']['807_PP03_M02.c3d'] = 'QSM_20230116122258' # Gimbal lock in senosrdata
     # Validatie trial 2
-    corresponding_files['807_pp03']['807_PP03_M03.c3d'] = 'QSM_20230116122428' # Gimbal lock in senosrdata
+    # corresponding_files['807_pp03']['807_PP03_M03.c3d'] = 'QSM_20230116122428' # Gimbal lock in senosrdata
     # Validatie trial 3
     corresponding_files['807_pp03']['807_PP03_M04.c3d'] = 'QSM_20230116122532' 
     # # Manta snelheid normaal, gevoeligheid medium
@@ -99,13 +99,13 @@ def correspondingfiles(folder):
     # corresponding_files['807_pp05']['807_PP05_M07.c3d'] = '20230116112409'
     
     # 807_pp06
-    # corresponding_files['807_pp06'] = dict()
-    # # Validatie trial 1
-    # corresponding_files['807_pp06']['807_PP06M01.c3d'] = 'QSM_20230201134952' # Sensordata bevat heel veel drift en een gimbal lock
+    corresponding_files['807_pp06'] = dict()
+    # Validatie trial 1
+    corresponding_files['807_pp06']['807_PP06M01.c3d'] = 'QSM_20230201134952' # Sensordata bevat heel veel drift
     # # Validatie trial 2
-    # corresponding_files['807_pp06']['807_PP06M02.c3d'] = 'QSM_20230201135053' # Sensordata bevat heel veel drift
-    # # Validatie trial 3
-    # corresponding_files['807_pp06']['807_PP06M03.c3d'] = 'QSM_20230201135221' # Sensordata bevat heel veel drift
+    # corresponding_files['807_pp06']['807_PP06M02.c3d'] = 'QSM_20230201135053' # Sensordata bevat heel veel drift en een gimbal lock
+    # Validatie trial 3
+    corresponding_files['807_pp06']['807_PP06M03.c3d'] = 'QSM_20230201135221' # Sensordata bevat heel veel drift
     # # # Manta snelheid normaal, gevoeligheid medium
     # # corresponding_files['807_pp06']['807_PP06M04.c3d'] = '20230201140133' # Niet bruikbaar (Bericht webex Lise Wilders 10-3-2023)
     # # Manta snelheid normaal, gevoeligheid minimaal
@@ -229,7 +229,7 @@ def correspondingfiles(folder):
     # Validatie trial 2
     corresponding_files['807_pp14']['807PP14_M03.c3d'] = 'QSM_20230125122342'
     # Validatie trial 3
-    corresponding_files['807_pp14']['807PP14_M04.c3d'] = 'QSM_20230125122446'
+    # corresponding_files['807_pp14']['807PP14_M04.c3d'] = 'QSM_20230125122446' # Missing packets?
     # # Manta snelheid normaal, gevoeligheid medium
     # corresponding_files['807_pp14']['807PP14_M05.c3d'] = '20230125123150'
     # # Manta snelheid normaal, gevoeligheid minimaal
@@ -242,9 +242,9 @@ def correspondingfiles(folder):
     # 807_pp15
     corresponding_files['807_pp15'] = dict()
     # Validatie trial 1
-    corresponding_files['807_pp15']['807_PP15_M01.c3d'] = 'QSM_20230116095507'
+    # corresponding_files['807_pp15']['807_PP15_M01.c3d'] = 'QSM_20230116095507' # Missing packets?
     # Validatie trial 2
-    corresponding_files['807_pp15']['807_PP15_M02.c3d'] = 'QSM_20230116095612'
+    # corresponding_files['807_pp15']['807_PP15_M02.c3d'] = 'QSM_20230116095612' # Missing packets?
     # Validatie trial 3
     corresponding_files['807_pp15']['807_PP15_M03.c3d'] = 'QSM_20230116095745'
     # # Manta snelheid normaal, gevoeligheid medium
@@ -257,13 +257,13 @@ def correspondingfiles(folder):
     # # corresponding_files['807_pp15']['807_PP_M.c3d'] = '' # Niet bruikbaar
     
     # 807_pp16
-    # corresponding_files['807_pp16'] = dict()
-    # # Validatie trial 1
-    # corresponding_files['807_pp16']['807_PP16M02.c3d'] = 'QSM_20230201122308' # Sensordata bevat heel veel drift
-    # # Validatie trial 2
-    # corresponding_files['807_pp16']['807_PP16M03.c3d'] = 'QSM_20230201122429' # Sensordata bevat heel veel drift
-    # # Validatie trial 3
-    # corresponding_files['807_pp16']['807_PP16M04.c3d'] = 'QSM_20230201122541' # Sensordata bevat heel veel drift
+    corresponding_files['807_pp16'] = dict()
+    # Validatie trial 1
+    corresponding_files['807_pp16']['807_PP16M02.c3d'] = 'QSM_20230201122308' # Sensordata bevat heel veel drift
+    # Validatie trial 2
+    corresponding_files['807_pp16']['807_PP16M03.c3d'] = 'QSM_20230201122429' # Sensordata bevat heel veel drift
+    # Validatie trial 3
+    corresponding_files['807_pp16']['807_PP16M04.c3d'] = 'QSM_20230201122541' # Sensordata bevat heel veel drift
     # # Manta snelheid normaal, gevoeligheid medium
     # corresponding_files['807_pp16']['807_PP16M05.c3d'] = '20230201123301'
     # # Manta snelheid normaal, gevoeligheid minimaal
