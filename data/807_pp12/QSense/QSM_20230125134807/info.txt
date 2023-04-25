@@ -1,0 +1,11 @@
+App version: v1.1
+Device ID: QSense BLE Dongle
+Main unit serial number: 1987-01-536875733
+Firmware version: 2,01
+Hardware version: 1,084825E-19
+Connected strings: A, B, E
+Reference sensor: Left Arm 1
+Calibration quality: 5
+Last calibrated on: 23-01-25 13:33:52
+Start: 2023-01-25 13:48:07
+Stop: 2023-01-25 13:51:46

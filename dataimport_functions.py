@@ -151,7 +151,7 @@ def correspondingfiles(folder):
     # # Shape sport lateroflexie
     # corresponding_files['807_pp08']['807_PP08M08.c3d'] = '20230131110910'
     
-    # GEEN VICON DATA? GEEN SYNCHRONISATIE PULS
+    # NO DATA, NO SYNC PULSE
     # # 807_pp10
     # corresponding_files['807_pp10'] = dict()
     # # Validatie trial 1
