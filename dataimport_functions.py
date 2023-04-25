@@ -31,16 +31,17 @@ def correspondingfiles(folder):
     
     # Set subfolder for vicon data
     for p in participants:
-        sub = os.listdir( folder + '/' + p + '/' + 'Vicon')
-        for s in sub:
-            if os.path.isdir( folder + '/' + p + '/' + 'Vicon' + '/' + s) and (s.startswith("807") or s.startswith("PP")):
-                foldersvicon.append( folder + '/' + p + '/' + 'Vicon' + '/' + s + '/C3D_ZonderGaps_MetKinematica')
+        if "V:/research_reva_studies" in folder:
+            sub = os.listdir( folder + '/' + p + '/' + 'Vicon')
+            for s in sub:
+                if os.path.isdir( folder + '/' + p + '/' + 'Vicon' + '/' + s) and (s.startswith("807") or s.startswith("PP")):
+                    foldersvicon.append( folder + '/' + p + '/' + 'Vicon' + '/' + s + '/C3D_ZonderGaps_MetKinematica')
+        else:
+            foldersvicon.append( folder + '/' + p + '/' + 'Vicon')
     # Set subfolder for sensor data
     for p in participants:
         if 'QSense' in os.listdir( folder + '/' + p):
             folderssensors.append( folder + '/' + p + '/' + 'QSense')
-        # elif 'Nodes' in os.listdir( folder + '/' + p):
-        #     folderssensors.append( folder + '/' + p + '/' + 'Nodes')
         if 'Corpus' in os.listdir( folder + '/' + p):
             folderssensors.append( folder + '/' + p + '/' + 'Corpus')
     
@@ -411,43 +412,9 @@ def importsensordata (corresponding_files, folderssensors):
                 sensors[trial]['sync stop'] = len(sensors[trial]['Upper back']['raw'])
             else:
                 print('Sensor data of trial ', trial, ' cannot be imported')
-            # elif 'Nodes' in sensortrialfolder:
-            #     sensors[trial]['Software'] = 'Nodes'
-            #     # Check if there is raw data
-            #     try:
-            #         print('Start import of sensor data of trial: ', trial)
-            #         backstring = '/R/T'
-            #         # Check outputformat Nodes raw data!
-            #         sensors[trial]['Upper back']['raw'] = pd.read_csv(sensortrialfolder + backstring + '/Sensor1.csv', delimiter='\t', decimal=',', engine='python', skiprows = 2, header=0, names=['q0', 'q1', 'q2', 'q3', 'q0r', 'q1r', 'q2r', 'q3r'])
-            #         sensors[trial]['Lower back']['raw'] = pd.read_csv(sensortrialfolder + backstring + '/Sensor2.csv', delimiter='\t', decimal=',', engine='python', skiprows = 2, header=0, names=['q0', 'q1', 'q2', 'q3', 'q0r', 'q1r', 'q2r', 'q3r'])
-            #         sensors[trial]['Pelvis']['raw'] = pd.read_csv(sensortrialfolder + backstring + '/Sensor3.csv', delimiter='\t', decimal=',', engine='python', skiprows = 2, header=0, names=['q0', 'q1', 'q2', 'q3', 'q0r', 'q1r', 'q2r', 'q3r'])
-            #     # Otherwise check if there is orientation data
-            #     except:
-            #         try:
-            #             print('Start import of sensor data of trial: ', trial)
-            #             backstring = '/Q/T'
-            #             sensors[trial]['Upper back']['raw'] = pd.read_csv(sensortrialfolder + backstring + '/Sensor1.csv', delimiter='\t', decimal=',', engine='python', skiprows = 2, header=0, names=['q0', 'q1', 'q2', 'q3', 'q0r', 'q1r', 'q2r', 'q3r'])
-            #             sensors[trial]['Lower back']['raw'] = pd.read_csv(sensortrialfolder + backstring + '/Sensor2.csv', delimiter='\t', decimal=',', engine='python', skiprows = 2, header=0, names=['q0', 'q1', 'q2', 'q3', 'q0r', 'q1r', 'q2r', 'q3r'])
-            #             sensors[trial]['Pelvis']['raw'] = pd.read_csv(sensortrialfolder + backstring + '/Sensor3.csv', delimiter='\t', decimal=',', engine='python', skiprows = 2, header=0, names=['q0', 'q1', 'q2', 'q3', 'q0r', 'q1r', 'q2r', 'q3r'])
-            #         except:
-            #             print('Sensor data of trial ', trial, ' cannot be imported')
-            #             sensors[trial]['Upper back']['raw'] = pd.DataFrame()
-            #             sensors[trial]['Lower back']['raw'] = pd.DataFrame()
-            #             sensors[trial]['Pelvis']['raw'] = pd.DataFrame()
                 
-            #     # Find sync pulses
-            #     try:
-            #         # find row of [1 1 1 1] = sync start
-            #         syncstart = np.where([(sensors[trial]['Upper back']['q0'] ==1) & (sensors[trial]['Upper back']['q1'] ==1) & (sensors[trial]['Upper back']['q2'] ==1) & (sensors[trial]['Upper back']['q3']==1)][0] == True)[0]
-            #         # find row of [0 0 0 0] = sync stop
-            #         syncstop = np.where([(sensors[trial]['Upper back']['q0'] ==0) & (sensors[trial]['Upper back']['q1'] ==0) & (sensors[trial]['Upper back']['q2'] ==0) & (sensors[trial]['Upper back']['q3']==0)][0] == True)[0]
-            #     except:
-            #         syncstart = 0
-            #         syncstop = len(sensors[trial]['Upper back']['raw'])
-            #     sensors[trial]['sync start'] = syncstart
-            #     sensors[trial]['sync stop'] = syncstop
-    
     return sensors
+
 
 
 def resamplesensordata (sensors, vicon):
@@ -484,14 +451,12 @@ def resamplesensordata (sensors, vicon):
             for col in columns: #sensors[trial]['Pelvis']['raw'].columns.values
                 sensors[trial]['Pelvis']['resampled'][col] = samplerate.resample(input_data=sensors[trial]['Pelvis']['raw'][col][sensors[trial]['sync start']:sensors[trial]['sync stop']], ratio=(nviconsamples/nsensorsamples), converter_type='sinc_best') #100/sensors[trial]['Fs'], 'sinc_best')
             
-            
-            
+
             
         # Resample Corpus data
         elif sensors[trial]['Software'] == 'Corpus':
             columns = sensors[trial]['Pelvis']['raw'].columns.values #['', '', '', '', '', '']
         
-           
             # try:
             for col in columns:
                 sensors[trial]['Upper back']['resampled'][col] = samplerate.resample(input_data=sensors[trial]['Upper back']['raw'][col][sensors[trial]['sync start']:sensors[trial]['sync stop']], ratio=100/sensors[trial]['Fs'], converter_type='sinc_best')

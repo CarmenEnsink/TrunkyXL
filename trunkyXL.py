@@ -14,10 +14,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy import stats
 from scipy import signal
+import os
 from sensor_analysis_functions import orientation_estimation, orientation_euler, relative_orientation
 from dataimport_functions import correspondingfiles, importvicondata, importsensordata, resamplesensordata
 
-folder = 'V:/research_reva_studies/807_TrunkyXL/II_Onderzoeksdata/Databestanden'
+cwd = os.getcwd()
+cwd = cwd.replace("\\", "/")
+folder = cwd + '/data' 
+# folder = 'V:/research_reva_studies/807_TrunkyXL/II_Onderzoeksdata/Databestanden'
 
 # Define corresponding files
 corresponding_files, foldersvicon, folderssensors = correspondingfiles(folder)
