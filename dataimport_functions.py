@@ -19,7 +19,7 @@ import numpy as np
 import os # Scan directories
 import samplerate
 
-from VICON_functions.readmarkerdata import readmarkerdata
+from readmarkerdata import readmarkerdata
 
 
 def correspondingfiles(folder):
