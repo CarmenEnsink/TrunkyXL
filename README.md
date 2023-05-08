@@ -10,6 +10,14 @@ These orientation estimations were compared to the gold standard, optical motion
 - the **sensor_analysis_functions.py** file, which contains functions to analyse the IMU data,
 - the **readmarkerdata.py** file, which contains functions to analyse the VICON data.
 
+During the validation trials and gameplay participants sat on a stool without arm- or backrest.
+Measurement protocol during validation trials was:
+- Three times flexion-extension (*"Bend forward and backward"*)
+- Three times lateroflexion, both left and right (*"Bend sideways"*)
+- Three times rotation, both left and right (*"Look behind you and bring your shoulders into this movement"*)
+Participants were asked **not** to lift their buttocks during these movements.
+
+
 The **data** folder structure is as follows:
  - folder per participant
     - Corpus *(sensordata during gameplay)*
