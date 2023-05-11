@@ -56,11 +56,12 @@ for trial in sensors:
 for trial in sensors:
     if sensors[trial]['Software'] == 'QSense Motion':
         try:
+            lw = 1
             fig, ax = plt.subplots(nrows=3, ncols=1)
             ax[0].set_title('Euler orientations '+trial[:-4])
-            ax[0].plot(vicon[trial]['LSpineAngles'][:,0], label='x Spine') # Flexion extension
-            ax[1].plot(vicon[trial]['LSpineAngles'][:,1], label='y Spine') # Latero flexion
-            ax[2].plot(vicon[trial]['LSpineAngles'][:,2], label='z Spine') # Rotation
+            ax[0].plot(vicon[trial]['LSpineAngles'][:,0], label='x Spine', linewidth=lw) # Flexion extension
+            ax[1].plot(vicon[trial]['LSpineAngles'][:,1], label='y Spine', linewidth=lw) # Latero flexion
+            ax[2].plot(vicon[trial]['LSpineAngles'][:,2], label='z Spine', linewidth=lw) # Rotation
             
             # ax[0].plot(vicon[trial]['LThoraxAngles'][:,0], label='x Spine') # Flexion extension
             # ax[1].plot(vicon[trial]['LThoraxAngles'][:,1], label='y Spine') # Latero flexion
@@ -74,9 +75,9 @@ for trial in sensors:
             # ax[1].plot(sensors[trial]['Upper back']['resampled']['ey'], label='y upper back') # Flexion extension
             # ax[2].plot(sensors[trial]['Upper back']['resampled']['ez'], label='z upper back') # Latero flexion
             
-            ax[1].plot(sensors[trial]['Upper back']['resampled']['ex relative to Pelvis'], label='x upper back relative')
-            ax[0].plot(-1*sensors[trial]['Upper back']['resampled']['ey relative to Pelvis'], label='y upper back relative')
-            ax[2].plot(sensors[trial]['Upper back']['resampled']['ez relative to Pelvis'], label='z upper back relative')
+            ax[1].plot(sensors[trial]['Upper back']['resampled']['ex relative to Pelvis'], label='x upper back relative', linewidth=lw)
+            ax[0].plot(-1*sensors[trial]['Upper back']['resampled']['ey relative to Pelvis'], label='y upper back relative', linewidth=lw)
+            ax[2].plot(sensors[trial]['Upper back']['resampled']['ez relative to Pelvis'], label='z upper back relative', linewidth=lw)
             
             ax[0].legend()
             ax[1].legend()
@@ -87,9 +88,9 @@ for trial in sensors:
         try:
             fig, ax = plt.subplots(nrows=3, ncols=1)
             ax[0].set_title('Euler orientations '+trial[:-4])
-            ax[0].plot(vicon[trial]['LSpineAngles'][:,0], label='x Spine') # Flexion extension
-            ax[1].plot(vicon[trial]['LSpineAngles'][:,1], label='y Spine') # Latero flexion
-            ax[2].plot(vicon[trial]['LSpineAngles'][:,2], label='z Spine') # Rotation
+            ax[0].plot(vicon[trial]['LSpineAngles'][:,0], label='x Spine', linewidth=lw) # Flexion extension
+            ax[1].plot(vicon[trial]['LSpineAngles'][:,1], label='y Spine', linewidth=lw) # Latero flexion
+            ax[2].plot(vicon[trial]['LSpineAngles'][:,2], label='z Spine', linewidth=lw) # Rotation
             
             # ax[0].plot(vicon[trial]['LThoraxAngles'][:,0], label='x Spine') # Flexion extension
             # ax[1].plot(vicon[trial]['LThoraxAngles'][:,1], label='y Spine') # Latero flexion
@@ -103,9 +104,9 @@ for trial in sensors:
             # ax[0].plot(-1*sensors[trial]['Upper back']['resampled']['ey'], label='y upper back') # Flexion extension
             # ax[2].plot(sensors[trial]['Upper back']['resampled']['ez'], label='z upper back') # Latero flexion
             
-            ax[1].plot(-1*sensors[trial]['Upper back']['resampled']['ex relative to Pelvis'], label='x upper back relative')
-            ax[2].plot(sensors[trial]['Upper back']['resampled']['ey relative to Pelvis'], label='y upper back relative')
-            ax[0].plot(sensors[trial]['Upper back']['resampled']['ez relative to Pelvis'], label='z upper back relative')
+            ax[1].plot(-1*sensors[trial]['Upper back']['resampled']['ex relative to Pelvis'], label='x upper back relative', linewidth=lw)
+            ax[2].plot(sensors[trial]['Upper back']['resampled']['ey relative to Pelvis'], label='y upper back relative', linewidth=lw)
+            ax[0].plot(sensors[trial]['Upper back']['resampled']['ez relative to Pelvis'], label='z upper back relative', linewidth=lw)
             
             ax[0].legend()
             ax[1].legend()
